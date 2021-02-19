@@ -5,8 +5,13 @@
 
 ## Convert CentOS Linux 8 into CentOS Stream 8
 
-TBD
+This is an easy one, if you brought your CentOS Linux machines with you, you
+might be able to complete this way before I even finish talking. Right now
+there are 3 steps, though we're very very close to dropping this down to 2:
 
+    $ sudo dnf install centos-release-stream
+    $ sudo dnf swap centos-linux-repos centos-stream-repos
+    $ sudo dnf distro-sync
 
 ## Running Stream in a container
 
@@ -100,4 +105,52 @@ There are some and we can install if we want.
 This is a great and easy way to try CentOS Stream 8 (or even use it as a base
 for your application, even though we suggest using [UBI
 8](https://catalog.redhat.com/software/containers/ubi8/5c647760bed8bd28d0e38f9f?gti-tabs=unauthenticated))
+
+
+## CentOS Stream in your cloud environment
+
+#### AWS
+
+Assuming you have a working EC2 setup, we publish AMIs in the various regions. You can grab the IDs from https://wiki.centos.org/Cloud/AWS
+
+On my workstation I have `awscli` installed and configured for my aws account. I also have some variables seen in the command line that specify things like my subnet, security group, and things that you should come with. 
+
+    $ aws ec2 run-instances --image-id ami-059f1cc52e6c85908 --count 1 --instance-type t2.micro --key-name ${AWS_KEY} --subnet-id ${AWS_SUBNET} --associate-public-ip-address
+
+    $ aws ec2 describe-instances
+    
+Or visit https://console.aws.amazon.com
+
+#### Other clouds, using the images on cloud.centos.org
+
+https://cloud.centos.org is where we store our images, so if we don't have images seeded into your provider, it's the GenericCloud image is a good place to start.
+
+Sometimes the images need tweaks, other times you can import them directly, do your cloud-init thing and go from there.
+
+## Vagrant
+
+One of the special images we produce is for vagrant: https://app.vagrantup.com/centos/boxes/stream8
+One for libvirt, one for virtualbox. You probably saw those on cloud.centos.org while we were looking at other images. 
+The `vagrant` folder of this repository has a small `Vagrantfile` to use, or you can start your own with: 
+
+    $ vagrant init centos/stream8
+    $ vagrant up
+
+## CentOS Stream for other Architectures
+
+Let's take a detour back into the mirrors and cloud.centos.org
+
+You'll notice that a lot of these things (even the container images) are
+available for machines that are not x86_64! So aarch64 folks, those of you with
+a fancy POWER workstations, you've got options too.
+
+## What can you do with your newly installed CentOS Stream boxes? 
+
+- Put it on your laptop
+- Run a server at home
+- Start playing with containers
+- Join us on the mailing lists to watch out for exciting new ways to actually
+  contribute, in collaboration with RHEL maintainers.
+
+If you find any bugs, those go under the RHEL section with a 'CentOS Stream' version in Red Hat's bugzilla.
 
